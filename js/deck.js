@@ -102,6 +102,7 @@ class ygoDeck{
 	}
 	
 	populateCardList(){
+		this.calculateSmallWorldLinks();
 		
 		this.initPicklist("cardList",this.smallWorldData);
 		
@@ -112,7 +113,7 @@ class ygoDeck{
 		
 		selectBox.size = Math.min(20,selectBox.options.length);
 		
-		this.calculateSmallWorldLinks();
+		
 		this.changeList();
 	}
 	
@@ -126,9 +127,6 @@ class ygoDeck{
 			for(let j in firstLinks){
 				let secondLinks = firstLinks[j].smallWorld;
 				for(let k in secondLinks){
-					if(card.id ==secondLinks[k].id ){
-						continue;
-					}
 					this.smallWorldLinks[cardId][secondLinks[k].id] = this.smallWorldLinks[cardId][secondLinks[k].id]?this.smallWorldLinks[cardId][secondLinks[k].id]:[];
 					this.smallWorldLinks[cardId][secondLinks[k].id].push(firstLinks[j].id);
 				}
@@ -140,7 +138,7 @@ class ygoDeck{
 	initPicklist(id,list,insertBlank){
 		let html = insertBlank?`<option value="">-- Select Card --</option>`:"";
 		for(let i in list){
-			html += `<option value="${list[i].id}">${list[i].name}</option>`
+			html += `<option value="${list[i].id}">${list[i].name}   (${Object.keys(this.smallWorldLinks[list[i].id]).length}/${list.length})</option>`
 		}
 		document.getElementById(id).innerHTML = html;
 		
@@ -164,6 +162,12 @@ class ygoDeck{
 				let outputs =  this.smallWorldLinks[cardId];
 				for(let i in outputs){
 					for(let j in outputs[i]){
+						
+						if(cardId == i ){
+							continue;
+						}
+						
+						
 						html += `
 							<div class="row cardRow">
 								<div class="col-sm-3">
