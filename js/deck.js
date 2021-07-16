@@ -110,7 +110,7 @@ class ygoDeck{
              selectBox.options[i].selected = true; 
         } 
 		
-		selectBox.size = selectBox.options.length;
+		selectBox.size = Math.min(20,selectBox.options.length);
 		
 		this.calculateSmallWorldLinks();
 		this.changeList();
