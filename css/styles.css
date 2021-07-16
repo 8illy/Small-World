@@ -1,0 +1,16 @@
+#cardOutput {
+    width: 60%;
+    margin: auto;
+    max-width: unset;
+}
+
+.cardImg {
+    max-width: 100%;
+    height: auto;
+	height: 235px;
+    width: auto;
+}
+
+.cardRow {
+    margin-bottom: 20px;
+}
