@@ -62,7 +62,7 @@ function smallWorldGroup(card){
 		let legal = false;
 		
 		for(let i of smallWorldFields){
-			let same = (e[i]==card[i]);
+			let same = (e[i]==card[i]) && (e[i] != "?");
 			
 			if(legal && same){
 				return false;
