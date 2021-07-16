@@ -151,6 +151,7 @@ class ygoDeck{
 		let html = "";
 		
 		let simplifyOutput = document.getElementById("simplifyOutput").checked;
+		let showSelfSearch = document.getElementById("showSelfSearch").checked;
 		let selected = Array.from(document.getElementById("cardList").selectedOptions).map((e)=>{return e.value});
 		
 		let cards = [].concat.call(...Object.values(this.decks));
@@ -163,7 +164,7 @@ class ygoDeck{
 				for(let i in outputs){
 					for(let j in outputs[i]){
 						
-						if(cardId == i ){
+						if(!showSelfSearch && cardId == i ){
 							continue;
 						}
 						
@@ -192,6 +193,11 @@ class ygoDeck{
 				
 				let outputs =  this.smallWorldLinks[cardId];
 				for(let i in outputs){
+					
+					
+						if(!showSelfSearch && cardId == i ){
+							continue;
+						}
 					
 					html += `
 						<div class="row cardRow">
