@@ -71,13 +71,33 @@ class ygoDeck{
 			this.decks[i] = this.decks[i].map(findCard(data));
 		}
 		
-		this.smallWorldData = this.decks.main.filter(filterUnique).filter(onlyMonsters).map((e)=>{
+		this.updateSmallWorldData();
+			
+	}
+	
+	updateSmallWorldData(){
+		
+		let includeSide = document.getElementById("includeSide").checked
+		let data = clone(this.decks.main);
+		if(includeSide){
+			data = data.concat(this.decks.side);
+		}
+		
+		this.smallWorldData = data.filter(filterUnique).filter(onlyMonsters).map((e)=>{
 			let c = clone(e);
 			c.smallWorld = this.getSmallWorldGroup(c,true); 
 			return c; 
+		}).sort((a,b)=>{
+			return a.name>b.name?1:-1;
 		});
 			
 		this.initPicklist("card1",this.smallWorldData,true);
+		this.populateCardList();
+		
+	}
+	
+	populateCardList(){
+		
 		this.initPicklist("cardList",this.smallWorldData);
 		
 		var selectBox = document.getElementById("cardList");
@@ -85,9 +105,8 @@ class ygoDeck{
              selectBox.options[i].selected = true; 
         } 
 		selectBox.onchange()
-			
+		selectBox.size = selectBox.options.length;
 	}
-	
 	
 	initPicklist(id,list,insertBlank){
 		let html = insertBlank?`<option value="">-- Select Card --</option>`:"";

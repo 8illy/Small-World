@@ -15,10 +15,51 @@
 	</head>
 	
 	<body>
-		<input type="file" name="ydkInput" id="ydkInput" onchange="YGODECK.loadDeckList(this.files[0])">
+	
+		<div class="container row containerBody">
+		
+			<div class="col-sm-2">
+				<div class="form-controls">
+			
+					<div class="form-group">
+						<label for="ydkInput">YDK Deck Upload</label>
+						<input type="file" name="ydkInput" id="ydkInput" onchange="YGODECK.loadDeckList(this.files[0])" accept=".ydk">
+						<small class="form-text text-muted">We do not Store your Deck List</small>
+					</div>
+					
+					<div class="form-group">
+						<label for="includeSide"> Include Side Deck</label>
+						<input type="checkbox" name="includeSide" id="includeSide" class="form-check-input" onchange="YGODECK.updateSmallWorldData()">
+						<small class="form-text text-muted">Show Combinations including Sided Cards</small>
+					</div>
+					
+					<div class="form-group">
+						<label for="cardList"> Monster List</label>
+						<select multiple id="cardList" onchange="YGODECK.changeList()"></select>
+						<small class="form-text text-muted">Select which Cards to Show</small>
+					</div>
+			
+				
+				
+				
+				</div>
+				
+			</div>
+			<div class="col-sm-10">
+				<div id="cardOutput" class="container"></div>
+			</div>
+  
+		
+		
+		</div>
+	
+		
+		
+		
+		
 	</body>
 	
-	<div style="display:none;">
+	<div style="display:none;"><!-- old version -->
 	
 		<select id="card1" onchange="YGODECK.changeCard('card1','card2')">
 		
@@ -36,15 +77,8 @@
 	
 	
 	
-	<select multiple id="cardList" onchange="YGODECK.changeList()">
-	
-	</select>
 	
 	
-	<div id="cardOutput" class="container">
 	
 	
-	</div>
-	
-  
 </html>

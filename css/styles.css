@@ -2,6 +2,7 @@
     width: 60%;
     margin: auto;
     max-width: unset;
+	padding-top: 3rem;
 }
 
 .cardImg {
@@ -13,4 +14,25 @@
 
 .cardRow {
     margin-bottom: 20px;
+}
+
+.containerBody {
+    width: 100%;
+    max-width: unset;
+}
+
+#cardList{
+	width: 100%;
+}
+
+.form-group {
+    margin-top: 1rem;
+}
+
+small.form-text.text-muted {
+    display: block;
+}
+
+.form-controls {
+    position: fixed;
 }
