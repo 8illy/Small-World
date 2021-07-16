@@ -5,6 +5,7 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 		<link rel="stylesheet" href="./css/styles.css">
 		<title>Small World</title>
+		<script src="./js/const.js"> </script>
 		<script src="./js/utility.js"> </script>
 		<script src="./js/deck.js"> </script>
 		
@@ -34,6 +35,18 @@
 					</div>
 					
 					<div class="form-group">
+						<label for="includeSide"> Simplify Output </label>
+						<input type="checkbox" name="simplifyOutput" id="simplifyOutput" class="form-check-input" onchange="YGODECK.changeList()" checked>
+						<small class="form-text text-muted">Merge rows with the same Input and Output</small>
+					</div>
+					
+					<div class="form-group">
+						<label for="includeSide"> Include Generic Good Cards </label>
+						<input type="checkbox" name="addGenericCards" id="addGenericCards" class="form-check-input" onchange="YGODECK.updateSmallWorldData()">
+						<small class="form-text text-muted">Add Hand Traps and Kaijus etc to the List</small>
+					</div>
+					
+					<div class="form-group">
 						<label for="cardList"> Monster List</label>
 						<select multiple id="cardList" onchange="YGODECK.changeList()"></select>
 						<small class="form-text text-muted">Select which Cards to Show</small>
@@ -53,27 +66,30 @@
 		
 		</div>
 	
-		
+		<!-- card popup modal for stacks -->
+		<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-modal="true"
+			role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="imageModalLabel">Modal title</h5>
+					</div>
+					<div class="modal-body">
+						<img src="#" id="modalImage">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-backdrop fade show" id="backdrop" style="display: none;"></div>
 		
 		
 		
 	</body>
 	
-	<div style="display:none;"><!-- old version -->
-	
-		<select id="card1" onchange="YGODECK.changeCard('card1','card2')">
-		
-		</select>
-		
-		<select id="card2" onchange="YGODECK.changeCard('card2','card3')">
-		
-		</select>
-		
-		<select id="card3" onchange="">
-		
-		</select>
-	
-	</div>
+
 	
 	
 	

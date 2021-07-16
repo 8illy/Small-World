@@ -36,3 +36,12 @@ small.form-text.text-muted {
 .form-controls {
     position: fixed;
 }
+
+.stackedCardImg {
+    display: inline;
+    position: absolute;
+}
+
+.stackedCardContainer {
+    position: relative;
+}

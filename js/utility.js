@@ -1,4 +1,3 @@
-const smallWorldFields = ["level","atk","def","attribute","race"];
 
 function filterUnique(e,i,a){
 	if(typeof e =="string" || typeof e =="number"){
@@ -75,3 +74,40 @@ function smallWorldGroup(card){
 		return legal;
 	}			
 }
+
+function openCardModel(cardId,cardName){
+	document.getElementById("modalImage").src = getCardImage(cardId)
+	document.getElementById("imageModalLabel").innerText = cardName;
+	openModal();
+}
+
+
+function getCardImage(id){
+	return `https://storage.googleapis.com/ygoprodeck.com/pics/${id}.jpg`;
+}
+
+
+
+/*modal*/
+function openModal() {
+    document.getElementById("backdrop").style.display = "block"
+    document.getElementById("imageModal").style.display = "block"
+    document.getElementById("imageModal").classList.add("show")
+}
+function closeModal() {
+    document.getElementById("backdrop").style.display = "none"
+    document.getElementById("imageModal").style.display = "none"
+    document.getElementById("imageModal").classList.remove("show")
+}
+// Get the modal
+var modal = document.getElementById('imageModal');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    closeModal()
+  }
+}
+
+
+

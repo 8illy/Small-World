@@ -14,6 +14,7 @@ class ygoDeck{
 			main : [],
 			extra : [],
 			side : [],
+			generic : clone(generics),
 		};
 	}
 	
@@ -77,21 +78,25 @@ class ygoDeck{
 	
 	updateSmallWorldData(){
 		
-		let includeSide = document.getElementById("includeSide").checked
+		let includeSide = document.getElementById("includeSide").checked;
+		let addGenericCards = document.getElementById("addGenericCards").checked;
 		let data = clone(this.decks.main);
 		if(includeSide){
 			data = data.concat(this.decks.side);
 		}
 		
+		if(addGenericCards){
+			data = data.concat(this.decks.generic);
+		}
+		
 		this.smallWorldData = data.filter(filterUnique).filter(onlyMonsters).map((e)=>{
 			let c = clone(e);
-			c.smallWorld = this.getSmallWorldGroup(c,true); 
+			c.smallWorld = this.getSmallWorldGroup(data,c,true); 
 			return c; 
 		}).sort((a,b)=>{
 			return a.name>b.name?1:-1;
 		});
 			
-		this.initPicklist("card1",this.smallWorldData,true);
 		this.populateCardList();
 		
 	}
@@ -104,8 +109,32 @@ class ygoDeck{
 		for (var i = 0; i < selectBox.options.length; i++) { 
              selectBox.options[i].selected = true; 
         } 
-		selectBox.onchange()
+		
 		selectBox.size = selectBox.options.length;
+		
+		this.calculateSmallWorldLinks();
+		this.changeList();
+	}
+	
+	calculateSmallWorldLinks(){
+		this.smallWorldLinks = {};
+		for(let i in this.smallWorldData){
+			let card =  this.smallWorldData[i];
+			let cardId = card.id;
+			let firstLinks = card.smallWorld;
+			this.smallWorldLinks[cardId] = {};
+			for(let j in firstLinks){
+				let secondLinks = firstLinks[j].smallWorld;
+				for(let k in secondLinks){
+					if(card.id ==secondLinks[k].id ){
+						continue;
+					}
+					this.smallWorldLinks[cardId][secondLinks[k].id] = this.smallWorldLinks[cardId][secondLinks[k].id]?this.smallWorldLinks[cardId][secondLinks[k].id]:[];
+					this.smallWorldLinks[cardId][secondLinks[k].id].push(firstLinks[j].id);
+				}
+				
+			}	
+		}
 	}
 	
 	initPicklist(id,list,insertBlank){
@@ -120,66 +149,89 @@ class ygoDeck{
 	
 	
 	changeList(){
+				
 		let html = "";
+		
+		let simplifyOutput = document.getElementById("simplifyOutput").checked;
 		let selected = Array.from(document.getElementById("cardList").selectedOptions).map((e)=>{return e.value});
 		
-		for(let cardId of selected){
-
-			let card =  this.smallWorldData.find((e)=>{return e.id==cardId})
-			let firstLinks =card.smallWorld;
-			
-			for(let j in firstLinks){
+		let cards = [].concat.call(...Object.values(this.decks));
+		
+		
+		if(!simplifyOutput){
+			for(let cardId of selected){
 				
-				let secondLinks = firstLinks[j].smallWorld;
-				
-				for(let k in secondLinks){
-					if(card.id ==secondLinks[k].id ){
-						continue;
+				let outputs =  this.smallWorldLinks[cardId];
+				for(let i in outputs){
+					for(let j in outputs[i]){
+						html += `
+							<div class="row cardRow">
+								<div class="col-sm-3">
+									<img class="cardImg" src="${getCardImage(cardId)}">
+								</div>
+								<div class="col-sm-1"></div>
+								<div class="col-sm-3">
+									<img class="cardImg" src="${getCardImage(outputs[i][j])}">
+								</div>
+								<div class="col-sm-1"></div>
+								<div class="col-sm-3">
+									<img class="cardImg" src="${getCardImage(i)}">
+								</div>
+						
+							</div>
+						`;
 					}
+				}
+			}
+		}else{
+			for(let cardId of selected){
+				
+				let outputs =  this.smallWorldLinks[cardId];
+				for(let i in outputs){
+					
 					html += `
 						<div class="row cardRow">
 							<div class="col-sm-3">
-								<img class="cardImg" src="https://storage.googleapis.com/ygoprodeck.com/pics/${card.id}.jpg">
+								<img class="cardImg" src="${getCardImage(cardId)}">
 							</div>
 							<div class="col-sm-1"></div>
-							<div class="col-sm-3">
-								<img class="cardImg" src="https://storage.googleapis.com/ygoprodeck.com/pics/${firstLinks[j].id}.jpg">
-							</div>
+							<div class="col-sm-3"><div class="stackedCardContainer">`
+							for(let j in outputs[i]){
+								let cardName = cards.find((e)=>e.id==outputs[i][j]).name;
+								html+=	`<img class="cardImg stackedCardImg" src="${getCardImage(outputs[i][j])}" style="left:${j*25}px;" onclick="openCardModel(${outputs[i][j]},'${cardName}')">`
+							}
+							html+=`</div></div>
 							<div class="col-sm-1"></div>
 							<div class="col-sm-3">
-								<img class="cardImg" src="https://storage.googleapis.com/ygoprodeck.com/pics/${secondLinks[k].id}.jpg">
+								<img class="cardImg" src="${getCardImage(i)}">
 							</div>
 					
 						</div>
 					`;
+					
 				}
-				
 			}
 			
 			
+			
+			
 		}
+		
 		
 		document.getElementById("cardOutput").innerHTML = html;
-		
 	}
-	
-	changeCard(id,target){
-		let cardId = document.getElementById(id).value;
-		let list = [];
-		if(cardId){
-			list = this.smallWorldData.find((e)=>{return e.id==cardId}).smallWorld;
-		}
-		this.initPicklist(target,list,true);
-	}
-	
-	
-	getSmallWorldGroup(card,recursive){
 		
-		let list = clone(this.decks.main.filter(smallWorldGroup(card))).filter(filterUnique);
+	
+	
+	
+	
+	getSmallWorldGroup(data,card,recursive){
+		
+		let list = clone(data.filter(smallWorldGroup(card))).filter(filterUnique);
 		
 		if(recursive){
 			list = list.map((e)=>{
-				e.smallWorld = this.getSmallWorldGroup(e,false); 
+				e.smallWorld = this.getSmallWorldGroup(data,e,false); 
 				return e;
 			});
 		}
