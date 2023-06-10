@@ -83,7 +83,8 @@ function openCardModel(cardId,cardName){
 
 
 function getCardImage(id){
-	return `https://storage.googleapis.com/ygoprodeck.com/pics/${id}.jpg`;
+	//return `https://storage.googleapis.com/ygoprodeck.com/pics/${id}.jpg`;
+	return `https://images.ygoprodeck.com/images/cards/${id}.jpg`;
 }
 
 
